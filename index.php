@@ -136,14 +136,12 @@
 
     $nowTime = date("Y-m-d");
 
-    //오늘 요일 0 ~ 6
-    $today_num = date('w');
-    $today_num = $today_num - 1;
-    $timestamp = strtotime("$nowTime -$today_num days");
+    $nowworkingTime = (int) (strtotime(date('Y-m-d H:i:s')) - strtotime($start_time)) / 60;
 
     $sql = "SELECT sub_min FROM log WHERE (user_id = '$user_id') AND (end_time BETWEEN '$nowTime 00:00:00' AND '$nowTime 24:59:59')";
     $result = mysqli_query($conn, $sql);
-    $timeCount = 0;
+    
+    $timeCount = $nowworkingTime;
     while($row = mysqli_fetch_array($result)) {
         $timeCount += (int) $row['sub_min'];
     }
@@ -151,10 +149,15 @@
     $nowWork_h = (int) ($nowWorkTime / 60);
     $nowWork_m = (int) ($nowWorkTime % 60);
 
+    //오늘 요일 0 ~ 6
+    $today_num = date('w');
+    $today_num = $today_num - 1;
+    $timestamp = strtotime("$nowTime -$today_num days");
+
     $monday = date("Y-m-d", $timestamp);
     $sql = "SELECT sub_min FROM log WHERE (user_id = '$user_id') AND (end_time BETWEEN '$monday 00:00:00' AND '$nowTime 24:59:59')";
     $result = mysqli_query($conn, $sql);
-    $timeCount = 0;
+    $timeCount = $nowworkingTime;
     while($row = mysqli_fetch_array($result)) {
         $timeCount += (int) $row['sub_min'];
     }
@@ -166,7 +169,7 @@
     $firstmonth = date('Y-m-01');
     $sql = "SELECT sub_min FROM log WHERE (user_id = '$user_id') AND (end_time BETWEEN '$firstmonth 00:00:00' AND '$nowTime 24:59:59')";
     $result = mysqli_query($conn, $sql);
-    $timeCount = 0;
+    $timeCount = $nowworkingTime;
     while($row = mysqli_fetch_array($result)) {
         $timeCount += (int) $row['sub_min'];
     }
