@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가입 페이지</title>
+    <style>
+        body, html {
+            margin: 0px;
+            padding: 0px;
+            background-color: rgb(131, 131, 131);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        @font-face {
+            font-family: bold;
+            src: url("./font/NanumSquareB.ttf");
+        }
+        @font-face {
+            font-family: NanumSquareL;
+            src: url("./font/NanumSquareL.ttf");
+        }
+        .login-box {
+            width: 400px;
+            height: 290px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .type {
+            display: inline-block;
+            width: 110px;
+        }
+        .title {
+            font-family: 'bold';
+            font-size: 23px;
+        }
+        .inputbox {
+            margin: 20px;
+        }
+        button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="title">가입</div>
+        <div class="inputbox">
+            <div class="row">
+                <div class="type">ID</div>
+                <input id="id" type="text">
+            </div>
+            <div class="row">
+                <div class="type">PW</div>
+                <input id="pw" type="password">
+            </div>
+            <div class="row">
+                <div class="type">PW 재확인</div>
+                <input id="repw" type="password">
+            </div>
+            <div class="row">
+                <div class="type">이름</div>
+                <input id="name" type="text">
+            </div>
+        </div>
+        <div>
+            <button id="userAddbt">가입</button>
+        </div>
+        
+    </div>
+</body>
+<script>
+    const id = document.getElementById("id");
+    const pw = document.getElementById("pw");
+    const repw = document.getElementById("repw");
+    const name = document.getElementById("name");
+
+    const userAddbt = document.getElementById("userAddbt");
+
+    userAddbt.onclick = function() {
+        if(
+            (id.value == "") ||
+            (pw.value == "") ||
+            (repw.value == "") ||
+            (name.value == "")
+        ) {
+            alert("입력란에 공백이 있습니다.");
+            return;
+        }
+
+        if(pw.value != repw.value) {
+            alert("비밀번호가 올바르지 않습니다.");
+            return;
+        }
+
+        let form = new FormData();
+        form.append('user_id', id.value);
+        form.append('user_pw', pw.value);
+        form.append('user_name', name.value);
+        fetch("./sign_up.php", {
+            method : "POST",
+            body : form,
+        })
+        .then(json => json.json())
+        .then(json => {
+            console.log(json);
+            if(json.err) {
+                alert(json.msg);
+                return;
+            }
+
+            alert("가입 되었습니다.");
+            location.href = "./";
+        });
+    }
+</script>
+</html>
