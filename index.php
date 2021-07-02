@@ -136,7 +136,13 @@
 
     $nowTime = date("Y-m-d");
 
-    $nowworkingTime = (int) (strtotime(date('Y-m-d H:i:s')) - strtotime($start_time)) / 60;
+    if($is_work == true) {
+        $nowworkingTime = (int) (strtotime(date('Y-m-d H:i:s')) - strtotime($start_time)) / 60;
+    }
+    else {
+        $nowworkingTime = 0;
+    }
+
 
     $sql = "SELECT sub_min FROM log WHERE (user_id = '$user_id') AND (end_time BETWEEN '$nowTime 00:00:00' AND '$nowTime 24:59:59')";
     $result = mysqli_query($conn, $sql);
